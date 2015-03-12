@@ -45,12 +45,15 @@ module.exports.routes = {
     '/podiologin' : 'UserController.podiologin',
     '/podioauth' : 'UserController.podioauth',
     '/podioauthrefresh' : 'UserController.podioauthrefresh',
+    '/xeroLogin' : 'UserController.xeroLogin',
+    '/backxero' : 'UserController.backxero',
 
     //job post automation and webhook
     '/jobPostAutomation/:spaceID' : 'ProjectController.jobPostAutomation',
     '/podioWorkSpace' : 'ProjectController.podioWorkSpace',
     'POST /jobCreate/:userID' : 'ProjectController.podioJobCreate',
     'POST /proposalUpdate/:userID' : 'ProposalsController.elanceProposalUpdate',
+    'POST /proposalCreateComment/:userID' : 'MessagesController.elanceProposalCreateComment',
 
 
     /***************************************************************************
