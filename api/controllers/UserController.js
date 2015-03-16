@@ -14,21 +14,21 @@ var oauth_token_old, oauth_token_secret_old;
 module.exports = {
 
     podiologin: function (req, res) {
-        res.redirect('https://podio.com/oauth/authorize?client_id=' + sails.config.globals.elancAppMainDataObj.client_id_podio + '&redirect_uri=' + sails.config.globals.elancAppMainDataObj.baseUrl+sails.config.globals.elancAppMainDataObj.webredirecrUrlPodio);
+        res.redirect('https://podio.com/oauth/authorize?client_id=' + sails.config.globals.xeroAppMainDataObj.client_id_podio + '&redirect_uri=' + sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodio);
     },
 
     podioauth: function (req, res) {
         console.log(req.param('code'));
 
         rp({
-            uri: "https://podio.com/oauth/token?grant_type=authorization_code&client_id=" + sails.config.globals.elancAppMainDataObj.client_id_podio + "&redirect_uri=" + sails.config.globals.elancAppMainDataObj.baseUrl+sails.config.globals.elancAppMainDataObj.webredirecrUrlPodio + "&client_secret=" + sails.config.globals.elancAppMainDataObj.client_secret_podio + "&code=" + req.param('code'),
+            uri: "https://podio.com/oauth/token?grant_type=authorization_code&client_id=" + sails.config.globals.xeroAppMainDataObj.client_id_podio + "&redirect_uri=" + sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodio + "&client_secret=" + sails.config.globals.xeroAppMainDataObj.client_secret_podio + "&code=" + req.param('code'),
             method: "POST"
         }).then(function (body) {
 
             var Tokendata = JSON.parse(body);
             Tokendata.tokenName = "podio";
             console.log(Tokendata);
-            sails.config.globals.elancAppMainDataObj.tokenDataPodio = Tokendata;
+            sails.config.globals.xeroAppMainDataObj.tokenDataPodio = Tokendata;
             var podioAuth = Tokendata;
 
             rp('https://api.podio.com/user/profile?oauth_token=' + Tokendata.access_token)
@@ -36,11 +36,11 @@ module.exports = {
                     var _data = JSON.parse(body);
                     var userInfo = _data;
 
-                    sails.config.globals.elancAppMainDataObj.userInfo = userInfo;
+                    sails.config.globals.xeroAppMainDataObj.userInfo = userInfo;
 
                     var reqUserData = {};
                     reqUserData.userInfo = userInfo;
-                    reqUserData.xeroAuth = sails.config.globals.elancAppMainDataObj.tokenDataXero;
+                    reqUserData.xeroAuth = sails.config.globals.xeroAppMainDataObj.tokenDataXero;
                     reqUserData.podioAuth = podioAuth;
 
                     return User.saveUser(reqUserData, function (err, users) {
@@ -48,7 +48,7 @@ module.exports = {
                             res.forbidden();
                         } else {
                             res.json(users);
-                            sails.config.globals.elancAppMainDataObj.userData = users;
+                            sails.config.globals.xeroAppMainDataObj.userData = users;
                             res.redirect('/podioWorkSpace');
                         }
                     });
@@ -69,7 +69,7 @@ module.exports = {
 
     podioWorkSpace: function (req, res) {
 
-        return sails.services.podioapi.podioOrgSpaces(req.body, function (err, orgs) {
+        PodioAPI.podioOrgSpaces(req.body, function (err, orgs) {
             if (err) {
                 res.forbidden();
             } else {
@@ -79,13 +79,9 @@ module.exports = {
     },
 
     xeroLogin: function (req, res) {
+        var oauth = sails.config.globals.xeroAppMainDataObj.xeroOauth;
 
-        var oauth = new OAuth.OAuth(sails.config.globals.xerooauthRequestUrls.Request_Token_URL,
-                                    sails.config.globals.xerooauthRequestUrls.Access_Token_URL,
-                                    sails.config.globals.elancAppMainDataObj.client_id_xero,
-                                    sails.config.globals.elancAppMainDataObj.client_secret_xero, '1.0A', null, 'HMAC-SHA1');
-
-        oauth.getOAuthRequestToken({'oauth_callback': sails.config.globals.elancAppMainDataObj.baseUrl+sails.config.globals.elancAppMainDataObj.webredirecrUrlXero}, function (error, oauth_token, oauth_token_secret, results) {
+        oauth.getOAuthRequestToken({'oauth_callback': sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlXero}, function (error, oauth_token, oauth_token_secret, results) {
             if (error)
                 sails.log.error(error);
             else {
@@ -104,10 +100,7 @@ module.exports = {
         var oauth_verifier = req.param('oauth_verifier');
         var org = req.param('org');
 
-        var oauth = new OAuth.OAuth(sails.config.globals.xerooauthRequestUrls.Request_Token_URL,
-                                    sails.config.globals.xerooauthRequestUrls.Access_Token_URL,
-                                    sails.config.globals.elancAppMainDataObj.client_id_xero,
-                                    sails.config.globals.elancAppMainDataObj.client_secret_xero, '1.0A', null, 'HMAC-SHA1');
+        var oauth = sails.config.globals.xeroAppMainDataObj.xeroOauth;
 
         console.log("Requesting access token");
 
@@ -121,7 +114,7 @@ module.exports = {
             xeroAuth.oauth_expires_in = results2.oauth_expires_in;
             xeroAuth.xero_org_muid = results2.xero_org_muid;
 
-            sails.config.globals.elancAppMainDataObj.tokenDataXero = xeroAuth;
+            sails.config.globals.xeroAppMainDataObj.tokenDataXero = xeroAuth;
             res.redirect('/podiologin');
 
             /*var data = {

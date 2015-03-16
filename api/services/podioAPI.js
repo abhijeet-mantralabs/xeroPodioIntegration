@@ -8,7 +8,7 @@ module.exports = {
     podioCreateJobCategory: function (category) {
 
         rp({
-            uri: "https://api.podio.com/item/app/" + sails.config.globals.podioAppIds.category + "?oauth_token=" + sails.config.globals.elancAppMainDataObj.tokenDataPodio.access_token,
+            uri: "https://api.podio.com/item/app/" + sails.config.globals.podioAppIds.category + "?oauth_token=" + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token,
             method: "POST",
             json: true,
             headers: {
@@ -26,7 +26,7 @@ module.exports = {
             .then(function (body) {
                 console.log('Saving category success -podio');
 
-                category.user_id = sails.config.globals.elancAppMainDataObj.userInfo.user_id;
+                category.user_id = sails.config.globals.xeroAppMainDataObj.userInfo.user_id;
 
                 Category.savecategory(category, function (err, proj) {
                     if (err) {
@@ -45,7 +45,7 @@ module.exports = {
 
     podioOrgSpaces: function (req, callback) {
 
-        rp('https://api.podio.com/org?oauth_token=' + sails.config.globals.elancAppMainDataObj.tokenDataPodio.access_token)
+        rp('https://api.podio.com/org?oauth_token=' + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token)
             .then(function (body) {
                 var _data = JSON.parse(body);
                 return callback(null, _data);
@@ -62,7 +62,7 @@ module.exports = {
 
         //category app
         rp({
-            uri: "https://api.podio.com/app?oauth_token=" + sails.config.globals.elancAppMainDataObj.tokenDataPodio.access_token,
+            uri: "https://api.podio.com/app?oauth_token=" + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token,
             method: "POST",
             json: true,
             headers: {
@@ -79,7 +79,7 @@ module.exports = {
                 console.log('App created');
 
                 //saving category App in local DB
-                body.user_id = sails.config.globals.elancAppMainDataObj.userInfo.user_id;
+                body.user_id = sails.config.globals.xeroAppMainDataObj.userInfo.user_id;
                 Application.saveApplication(body, function (err, data) {
                     if (!err) {
                         console.log('saving App in local DB');
@@ -93,14 +93,14 @@ module.exports = {
 
     podioWebHookCreate: function (app_id, type) {
         rp({
-            uri: "https://api.podio.com/hook/app/app_id?oauth_token=" + sails.config.globals.elancAppMainDataObj.tokenDataPodio.access_token,
+            uri: "https://api.podio.com/hook/app/app_id?oauth_token=" + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token,
             method: "POST",
             json: true,
             headers: {
                 "content-type": "application/json"
             },
             body: {
-                "url": sails.config.globals.elancAppMainDataObj.webredirecrUrlPodioHookJobPost,
+                "url": sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodioHookJobPost,
                 "type": "item.create"
             }
 
@@ -193,7 +193,7 @@ module.exports = {
 
 
                 rp({
-                    uri: "https://podio.com/oauth/token?grant_type=refresh_token&client_id=" + sails.config.globals.elancAppMainDataObj.client_id_podio + "&client_secret=" + sails.config.globals.elancAppMainDataObj.client_secret_podio + "&refresh_token=" + podioRefreshToken,
+                    uri: "https://podio.com/oauth/token?grant_type=refresh_token&client_id=" + sails.config.globals.xeroAppMainDataObj.client_id_podio + "&client_secret=" + sails.config.globals.xeroAppMainDataObj.client_secret_podio + "&refresh_token=" + podioRefreshToken,
                     method: "POST"
                 })
                     .then(function (body) {
@@ -210,7 +210,7 @@ module.exports = {
 
                         User.saveUser(_userData, function (err, users) {
                             if (!err) {
-                                sails.config.globals.elancAppMainDataObj.userData = users;
+                                sails.config.globals.xeroAppMainDataObj.userData = users;
                                 return callback(null, users);
                             } else {
                                 console.log('podioAPI -> podioRefreshToken -> saveChangedUserInfo - Failed');

@@ -13,7 +13,7 @@ module.exports = {
             if (err) {
                 res.forbidden();
             } else {
-               res.send(proj)
+                res.send(proj)
 
             }
         });
@@ -44,8 +44,10 @@ module.exports = {
 
     createApps : function(req, res){
         var spaceID = req.param('spaceID');
-        //sails.services.podioapi.podioAppCreate(spaceID);
         res.view('loading');
+
+        //sails.services.podioapi.podioAppCreate(spaceID);
+
     }
 };
 

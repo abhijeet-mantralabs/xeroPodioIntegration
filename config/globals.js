@@ -8,6 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.globals.html
  */
+
 module.exports.globals = {
 
     /****************************************************************************
@@ -61,14 +62,15 @@ module.exports.globals = {
 
     // models: true
 
-    elancAppMainDataObj: {},
+    xeroAppMainDataObj: {},
 
-    elancAppMainDataObjLocal: {
+    xeroAppMainDataObjLocal: {
         baseUrl: 'http://25b56dfd.ngrok.com/',
         userData: {},
         userInfo: {},
         tokenDataXero: {},
         tokenDataPodio: {},
+        xeroOauth : {},
         projIds: [],
         webredirecrUrlXero: 'backxero',
         webredirecrUrlPodio: 'podioauth',
@@ -80,12 +82,13 @@ module.exports.globals = {
 
     },
 
-    elancAppMainDataObjRemote: {
+    xeroAppMainDataObjRemote: {
         baseUrl: 'http://54.88.90.102/',
         userData: {},
         userInfo: {},
         tokenDataXero: {},
         tokenDataPodio: {},
+        xeroOauth : {},
         projIds: [],
         webredirecrUrlXero:  'backxero',
         webredirecrUrlPodio:  'podioauth',
@@ -102,4 +105,5 @@ module.exports.globals = {
         Access_Token_URL : "https://api.xero.com/oauth/AccessToken",
         API_Endpoint_URL : "https://api.xero.com/api.xro/2.0/"
     }
+
 };

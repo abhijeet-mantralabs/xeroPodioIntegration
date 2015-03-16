@@ -8,23 +8,29 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
-
+var OAuth = require('oauth');
 module.exports.bootstrap = function(cb) {
 
-    getElancAppMainDataObj: (function () {
+    getXeroAppMainDataObj: (function () {
         var serverType = 'local';
         switch (serverType) {
             case 'local' :
-                sails.config.globals.elancAppMainDataObj = sails.config.globals.elancAppMainDataObjLocal;
+                sails.config.globals.xeroAppMainDataObj = sails.config.globals.xeroAppMainDataObjLocal;
                 break;
 
             case 'remote' :
-                sails.config.globals.elancAppMainDataObj = sails.config.globals.elancAppMainDataObjRemote;
+                sails.config.globals.xeroAppMainDataObj = sails.config.globals.xeroAppMainDataObjRemote;
                 break;
 
             default :
-                sails.config.globals.elancAppMainDataObj = sails.config.globals.elancAppMainDataObjRemote;
+                sails.config.globals.xeroAppMainDataObj = sails.config.globals.xeroAppMainDataObjRemote;
         }
+
+        sails.config.globals.xeroAppMainDataObj.xeroOauth = new OAuth.OAuth(sails.config.globals.xerooauthRequestUrls.Request_Token_URL,
+            sails.config.globals.xerooauthRequestUrls.Access_Token_URL,
+            sails.config.globals.xeroAppMainDataObj.client_id_xero,
+            sails.config.globals.xeroAppMainDataObj.client_secret_xero, '1.0A', null, 'HMAC-SHA1');
+
     })()
 
   // It's very important to trigger this callback method when you are finished
