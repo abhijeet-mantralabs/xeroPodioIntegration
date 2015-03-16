@@ -73,14 +73,14 @@ module.exports.globals = {
         ],
         projIds: [],
         webredirecrUrlElance: 'http://localhost:1338/back',
-        webredirecrUrlPodio: 'http://25b56dfd.ngrok.com/podioauth',
+        webredirecrUrlPodio: 'http://4741ef6c.ngrok.com/podioauth',
         webredirecrUrlPodioHookJobPost : "http://25b56dfd.ngrok.com/jobCreate",
         webredirecrUrlPodioHookProposalUpdate : "http://25b56dfd.ngrok.com/proposalUpdate",
         webredirecrUrlPodioHookProposalCreateComment : "http://25b56dfd.ngrok.com/proposalCreateComment",
         client_id_elance: "54db1119e4b0ce56b5a32eb8",
-        client_id_podio: "elanceapi",
+        client_id_podio: "mantraxero",
         client_secret_elance: "3zINaEeIe4K9OPMZTNol0A",
-        client_secret_podio: "WRExsjEHUe1ZUwQvSkjoKTpIk0L1gZKxlFLDcsXctVpNLMyqzH63MrZCya0sLYtH",
+        client_secret_podio: "cln6Y8T59cuDLXxsqAMgA5PIyp5vfte14r1OmybeF4loi917m1Xg1jJcW8H5ICse",
         getAccessToken : function(userId, type){
             for(var i=0; i<this.userData.length; i++){
                 if(this.userData[i].userInfo.user_id == userId){
