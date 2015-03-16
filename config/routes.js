@@ -23,37 +23,15 @@
 
 
 module.exports.routes = {
-
-    'GET /project': 'ProjectController.getProject',
-    'GET /project/:id': 'ProjectController.getProjectDetail',
-    'POST /project': 'ProjectController.saveProject',
-    'PUT /project/:id': 'ProjectController.editProject',
-    'DELETE /project/:id': 'ProjectController.deleteProject',
-
-    'GET /getProjectType': 'ProjectTypeController.getProjectType',
-    'POST /saveProjectType': 'ProjectTypeController.saveProjectType',
-
-    //config page
-    '/elancePodioConfig' : 'UserController.elancePodioConfig',
-
-    //elance data
-    '/back' : 'UserController.getAuthcode',
-    'GET /getTokens' : 'UserController.getTokens',
-    '/elancetitle' : 'ProjectController.getTitle',
-    //'/' : 'UserController.elanceLogin',
-    '/elanceLogin' : 'UserController.elanceLogin',
+    //xero and podio -> authentication routes
     '/podiologin' : 'UserController.podiologin',
     '/podioauth' : 'UserController.podioauth',
-    '/podioauthrefresh' : 'UserController.podioauthrefresh',
     '/xeroLogin' : 'UserController.xeroLogin',
     '/backxero' : 'UserController.backxero',
 
-    //job post automation and webhook
-    '/jobPostAutomation/:spaceID' : 'ProjectController.jobPostAutomation',
-    '/podioWorkSpace' : 'ProjectController.podioWorkSpace',
-    'POST /jobCreate/:userID' : 'ProjectController.podioJobCreate',
-    'POST /proposalUpdate/:userID' : 'ProposalsController.elanceProposalUpdate',
-    'POST /proposalCreateComment/:userID' : 'MessagesController.elanceProposalCreateComment',
+    //xero and podio -> integration routes
+    '/createApps/:spaceID' : 'ApplicationController.createApps',
+    '/podioWorkSpace' : 'UserController.podioWorkSpace',
 
 
     /***************************************************************************

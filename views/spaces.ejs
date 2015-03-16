@@ -14,7 +14,7 @@
 
                     <ul class="nav ">
                         <% for(var j = 0; j < orgs[i].spaces.length; j++) { %>
-                        <li class="workspace"><a href="/jobPostAutomation/<%= orgs[i].spaces[j].space_id %>" data-space-ID ="<%= orgs[i].spaces[j].space_id %>" data-org-ID="<%= orgs[i].spaces[j].org_id %>"><%= orgs[i].spaces[j].name %></a></li>
+                        <li class="workspace"><a href="/createApps/<%= orgs[i].spaces[j].space_id %>" data-space-ID ="<%= orgs[i].spaces[j].space_id %>" data-org-ID="<%= orgs[i].spaces[j].org_id %>"><%= orgs[i].spaces[j].name %></a></li>
                         <% } %>
                     </ul>
 

@@ -40,6 +40,12 @@ module.exports = {
 
             }
         });
+    },
+
+    createApps : function(req, res){
+        var spaceID = req.param('spaceID');
+        //sails.services.podioapi.podioAppCreate(spaceID);
+        res.view('loading');
     }
 };
 
