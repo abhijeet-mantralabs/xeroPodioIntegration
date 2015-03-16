@@ -11,7 +11,15 @@ var rp = require('request-promise');
 var podioAuth, elanceAuth, userInfo;
 var OAuth = require('oauth');
 var util     = require('util');
+var js2xmlparser = require("js2xmlparser");
 var oauth_token_old, tokenSecret;
+
+var consumerKey = 'HIW911APZVNIPFQSBJGND0UUINQSUA';
+var consumerSecret = 'AT62QK5EUAHZPGIEQSHUI4WOTMU65Z';
+var requestTokenUrl = 'https://api.xero.com/oauth/RequestToken';
+var accessTokenUrl = 'https://api.xero.com/oauth/AccessToken';
+
+
 
 module.exports = {
     signup: function (req, res) {
@@ -171,73 +179,70 @@ module.exports = {
     },
 
     xeroLogin : function(req, res){
-        var oauth = new OAuth.OAuth(
-            'https://api.xero.com/oauth/RequestToken',
-            'https://api.xero.com/oauth/AccessToken',
-            'XNR1HUZFKG9WAAMSCCXGNZALAI62NF',
-            'CP0PKUFHCLJGCDYGGNTRDRXBB4CZYN',
-            '1.0A',
-             null,
-            'HMAC-SHA1'
-        );
+        console.log(requestTokenUrl);
 
+        var oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, consumerKey, consumerSecret,'1.0A', null, 'HMAC-SHA1');
 
-        oauth.getOAuthRequestToken({'oauth_callback': 'http://25b56dfd.ngrok.com/backxero'}, function(error, oauth_token, oauth_token_secret, results){
-            if(error) util.puts('error :' + error)
+        oauth.getOAuthRequestToken({'oauth_callback': 'http://4741ef6c.ngrok.com/backxero'}, function(error, oauth_token, oauth_token_secret, results){
+            if(error) 
+                sails.log.error(error);
             else {
                 oauth_token_old = oauth_token;
                 tokenSecret = oauth_token_secret;
-
-                util.puts('oauth_token :' + oauth_token)
-
+                console.log('oauth_token :' + oauth_token)
                 req.session.oauth_token_secret = oauth_token_secret;
-                util.puts('oauth_token_secret :' + oauth_token_secret)
-                util.puts('requestoken results :' + util.inspect(results))
-                util.puts("Requesting access token")
-
+                console.log('oauth_token_secret :' + oauth_token_secret)
+                console.log('requestoken results :' + util.inspect(results))
+                console.log("Requesting access token")
                 res.redirect('https://api.xero.com/oauth/Authorize?oauth_token='+oauth_token);
-
-
             }
         })
     },
 
     backxero : function(req,res){
         console.log(req.params.all());
-
-        res.send('Auth. successfull');
         var oauth_token_secret = tokenSecret;
         var oauth_token = req.param('oauth_token');
         var oauth_verifier = req.param('oauth_verifier');
         var org = req.param('org');
-
-        var oauth = new OAuth.OAuth(
-            'https://api.xero.com/oauth/RequestToken',
-            'https://api.xero.com/oauth/AccessToken',
-            'XNR1HUZFKG9WAAMSCCXGNZALAI62NF',
-            'CP0PKUFHCLJGCDYGGNTRDRXBB4CZYN',
-            '1.0A',
-            null,
-            'HMAC-SHA1'
-        );
-
-                    oauth.getOAuthAccessToken(oauth_token, oauth_token_secret, oauth_verifier,function(error, oauth_access_token, oauth_access_token_secret, results2) {
-                        console.dir(error);
-                        console.log(error)
-                        util.puts('error :'+error)
-                        util.puts('oauth_access_token :' + oauth_access_token)
-                        util.puts('oauth_token_secret :' + oauth_access_token_secret)
-                        util.puts('accesstoken results :' + util.inspect(results2))
-                        util.puts("Requesting access token")
-                        var data = "";
-                   oauth.getProtectedResource("https://api.xero.com/api.xro/2.0/Organisation",
-                                                "GET",
-                                                "application/json",
-                                                oauth_access_token,
-                                                oauth_access_token_secret,  function (error, data, response) {
-                        util.puts(data);
-                    });
-                });
+        var oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, consumerKey, consumerSecret,'1.0A', null, 'HMAC-SHA1');
+        oauth.getOAuthAccessToken(oauth_token, oauth_token_secret, oauth_verifier, function(error, oauth_access_token, oauth_access_token_secret, results2) {
+            console.dir(error);
+            console.log(error)
+            console.log('error :'+error)
+            console.log('oauth_access_token :' + oauth_access_token)
+            console.log('oauth_token_secret :' + oauth_access_token_secret)
+            console.log('accesstoken results :' + util.inspect(results2))
+            console.log("Requesting access token");         
+            var data = {
+                'Type':'ACCREC',
+                'Contact':{
+                    'Name':'ABC Limited'
+                },
+                'Date':'2009-08-30',
+                'DueDate':'2009-09-20',
+                'LineAmountTypes':'Exclusive',
+                'LineItems':{
+                    'LineItem':{
+                        'Description':'Consulting services as agreed (20% off standard rate)',
+                        'Quantity':'10',
+                        'UnitAmount':'100.00',
+                        'AccountCode':'200',
+                        'DiscountRate':'20'
+                    }
+                }
+            }
+            var post_body = js2xmlparser("Invoice", data)
+            console.log(post_body);
+            oauth.post("https://api.xero.com/api.xro/2.0/Invoices", oauth_access_token, oauth_access_token_secret, post_body, 'text/xml;charset=UTF-8', function(error, data, response){
+                if(error){
+                    console.log(error)
+                }else{
+                    console.log(data)
+                    // console.log(response)
+                }
+            })
+        });
     }
 };
 
