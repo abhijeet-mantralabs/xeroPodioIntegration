@@ -8,7 +8,6 @@
 var rp = require('request-promise');
 var OAuth = require('oauth');
 var util = require('util');
-var js2xmlparser = require("js2xmlparser");
 var oauth_token_old, oauth_token_secret_old;
 
 module.exports = {
@@ -116,35 +115,6 @@ module.exports = {
 
             sails.config.globals.xeroAppMainDataObj.tokenDataXero = xeroAuth;
             res.redirect('/podiologin');
-
-            /*var data = {
-             'Type': 'ACCREC',
-             'Contact': {
-             'Name': 'ABC Limited'
-             },
-             'Date': '2009-08-30',
-             'DueDate': '2009-09-20',
-             'LineAmountTypes': 'Exclusive',
-             'LineItems': {
-             'LineItem': {
-             'Description': 'Consulting services as agreed (20% off standard rate)',
-             'Quantity': '10',
-             'UnitAmount': '100.00',
-             'AccountCode': '200',
-             'DiscountRate': '20'
-             }
-             }
-             };
-             var post_body = js2xmlparser("Invoice", data);
-             console.log(post_body);
-             oauth.post("https://api.xero.com/api.xro/2.0/Invoices", oauth_access_token, oauth_access_token_secret, post_body, 'text/xml;charset=UTF-8', function (error, data, response) {
-             if (error) {
-             console.log(error)
-             } else {
-             console.log(data)
-             }
-             });*/
-
 
         });
     }

@@ -33,7 +33,8 @@ module.exports.routes = {
     '/createApps/:spaceID' : 'ApplicationController.createApps',
     '/podioWorkSpace' : 'UserController.podioWorkSpace',
 
-
+    //web-hook routes
+    '/invoiceCreated/:userID' : 'InvoiceController.postXeroInvoice',
     /***************************************************************************
      *                                                                          *
      * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *

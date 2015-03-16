@@ -55,10 +55,10 @@ module.exports = {
             });
     },
 
-    podioAppCreate: function (spaceID,payload) {
+    podioAppCreate: function (spaceID,payload, callback) {
         var spaceID = parseInt(spaceID);
         var reqPayload = payload;
-
+        reqPayload.space_id = spaceID;
 
         //category app
         rp({
@@ -83,6 +83,9 @@ module.exports = {
                 Application.saveApplication(body, function (err, data) {
                     if (!err) {
                         console.log('saving App in local DB');
+                        return callback(null, data);
+                    }else{
+                        return callback(error, {"status": "failed"});
                     }
                 });
 
@@ -91,25 +94,26 @@ module.exports = {
             .catch(console.error);
     },
 
-    podioWebHookCreate: function (app_id, type) {
+    podioWebHookCreate: function (app_id, type,urlPath, callback) {
         rp({
-            uri: "https://api.podio.com/hook/app/app_id?oauth_token=" + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token,
+            uri: "https://api.podio.com/hook/app/"+app_id+"?oauth_token=" + sails.config.globals.xeroAppMainDataObj.tokenDataPodio.access_token,
             method: "POST",
             json: true,
             headers: {
                 "content-type": "application/json"
             },
             body: {
-                "url": sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodioHookJobPost,
+                "url": sails.config.globals.xeroAppMainDataObj.baseUrl+urlPath+'/'+sails.config.globals.xeroAppMainDataObj.userInfo.user_id,
                 "type": "item.create"
             }
 
         })
             .then(function (body) {
-
+                //var _data = JSON.parse(body);
+                return callback(null, body);
             })
             .catch(function (error) {
-
+                return callback(error, {"status": "failed"});
             });
     },
 
