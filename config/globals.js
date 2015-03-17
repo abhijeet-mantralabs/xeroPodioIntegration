@@ -8,6 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.globals.html
  */
+
 module.exports.globals = {
 
     /****************************************************************************
@@ -61,103 +62,505 @@ module.exports.globals = {
 
     // models: true
 
-    elancAppMainDataObj: {},
+    xeroAppMainDataObj: {},
 
-    elancAppMainDataObjLocal: {
-        userData : {},
-        userInfo : {},
-        tokenDataElance: {},
+    xeroAppMainDataObjLocal: {
+        baseUrl: 'http://25b56dfd.ngrok.com/',
+        userData: {},
+        userInfo: {},
+        tokenDataXero: {},
         tokenDataPodio: {},
-        projTypes: [
-            {name: "php"}
-        ],
+        xeroOauth: {},
         projIds: [],
-        webredirecrUrlElance: 'http://localhost:1338/back',
-        webredirecrUrlPodio: 'http://4741ef6c.ngrok.com/podioauth',
-        webredirecrUrlPodioHookJobPost : "http://25b56dfd.ngrok.com/jobCreate",
-        webredirecrUrlPodioHookProposalUpdate : "http://25b56dfd.ngrok.com/proposalUpdate",
-        webredirecrUrlPodioHookProposalCreateComment : "http://25b56dfd.ngrok.com/proposalCreateComment",
-        client_id_elance: "54db1119e4b0ce56b5a32eb8",
-        client_id_podio: "mantraxero",
-        client_secret_elance: "3zINaEeIe4K9OPMZTNol0A",
-        client_secret_podio: "cln6Y8T59cuDLXxsqAMgA5PIyp5vfte14r1OmybeF4loi917m1Xg1jJcW8H5ICse",
-        getAccessToken : function(userId, type){
-            for(var i=0; i<this.userData.length; i++){
-                if(this.userData[i].userInfo.user_id == userId){
-                    if(type == "elance" ){
-                        return this.userData[i].elanceAuth.access_token;
-                    }else{
-                        return this.userData[i].podioAuth.access_token;
-                    }
-
-                }
-            }
-        },
-
-        getRefreshToken : function(userId, type){
-            for(var i=0; i<this.userData.length; i++){
-                if(this.userData[i].userInfo.user_id == userId){
-                    if(type == "elance" ){
-                        return this.userData[i].elanceAuth.refresh_token;
-                    }else{
-                        return this.userData[i].podioAuth.refresh_token;
-                    }
-
-                }
-            }
-        }
+        webredirecrUrlXero: 'backxero',
+        webredirecrUrlPodio: 'podioauth',
+        invoiceWebHookUrl: "invoiceCreate",
+        client_id_xero: "XNR1HUZFKG9WAAMSCCXGNZALAI62NF",
+        client_id_podio: "elanceapi",
+        client_secret_xero: "CP0PKUFHCLJGCDYGGNTRDRXBB4CZYN",
+        client_secret_podio: "WRExsjEHUe1ZUwQvSkjoKTpIk0L1gZKxlFLDcsXctVpNLMyqzH63MrZCya0sLYtH"
 
     },
 
-    elancAppMainDataObjRemote: {
-        userData : {},
-        userInfo : {},
-        tokenDataElance: {},
+    xeroAppMainDataObjRemote: {
+        baseUrl: 'http://54.88.90.102/',
+        userData: {},
+        userInfo: {},
+        tokenDataXero: {},
         tokenDataPodio: {},
-        projTypes: [
-            {name: "php"}
-        ],
+        xeroOauth: {},
         projIds: [],
-        webredirecrUrlElance: 'http://54.88.90.102/back',
-        webredirecrUrlPodio: 'http://54.88.90.102/podioauth',
-        webredirecrUrlPodioHookJobPost : "http://54.88.90.102/jobCreate",
-        webredirecrUrlPodioHookProposalUpdate : "http://54.88.90.102/proposalUpdate",
-        webredirecrUrlPodioHookProposalCreateComment : "http://54.88.90.102/proposalCreateComment",
-        client_id_elance: "54ee5c47e4b0ce56b5a32ed6",
+        webredirecrUrlXero: 'backxero',
+        webredirecrUrlPodio: 'podioauth',
+        invoiceWebHookUrl: "invoiceCreate",
+        client_id_xero: "PJCLWXUV0KLJBIALNMISPMDRJZRTCU",
         client_id_podio: "elanceapimain",
-        client_secret_elance: "6goKMXnTwo_XiFk1MC3qCA",
-        client_secret_podio: "0V3Eg4vcLCWWebvDIuPRmE8bu18TadatfLCJLp1WCkeebPxGh8knjKXieEYYF71U",
-        getAccessToken : function(userId, type){
-            for(var i=0; i<this.userData.length; i++){
-                if(this.userData[i].userInfo.user_id == userId){
-                    if(type == "elance" ){
-                        return this.userData[i].elanceAuth.access_token;
-                    }else{
-                        return this.userData[i].podioAuth.access_token;
-                    }
-
-                }
-            }
-        },
-
-        getRefreshToken : function(userId, type){
-            for(var i=0; i<this.userData.length; i++){
-                if(this.userData[i].userInfo.user_id == userId){
-                    if(type == "elance" ){
-                        return this.userData[i].elanceAuth.refresh_token;
-                    }else{
-                        return this.userData[i].podioAuth.refresh_token;
-                    }
-
-                }
-            }
-        }
+        client_secret_xero: "CWMNNYJCDNYDY587OYIQHIQOCLB0Y0",
+        client_secret_podio: "0V3Eg4vcLCWWebvDIuPRmE8bu18TadatfLCJLp1WCkeebPxGh8knjKXieEYYF71U"
     },
 
-    podioAppIds :{
-        proposal : "11169426",
-        category : "11333622",
-        subcategory : "11333626"
+    xerooauthRequestUrls: {
+        Request_Token_URL: "https://api.xero.com/oauth/RequestToken",
+        Authorise_URL: "https://api.xero.com/oauth/RequestToken",
+        Access_Token_URL: "https://api.xero.com/oauth/AccessToken",
+        API_Endpoint_URL: "https://api.xero.com/api.xro/2.0/"
+    },
+
+    podioAppPayLoad :{
+        invoiceApp : {
+            "space_id": 3251266,
+            "config": {
+                "allow_edit": true,
+                "tasks": [],
+                "yesno": false,
+                "silent_creates": false,
+                "yesno_label": null,
+                "thumbs": false,
+                "app_item_id_padding": 5,
+                "show_app_item_id": true,
+                "default_view": "table",
+                "allow_tags": true,
+                "item_name": "Invoice",
+                "allow_attachments": true,
+                "allow_create": true,
+                "app_item_id_prefix": "GSX",
+                "disable_notifications": false,
+                "fivestar": false,
+                "thumbs_label": null,
+                "type": "standard",
+                "rsvp": false,
+                "description": null,
+                "usage": null,
+                "fivestar_label": null,
+                "approved": false,
+                "icon": "223.png",
+                "allow_comments": false,
+                "name": "Xero Invoice",
+                "icon_id": 223,
+                "silent_edits": false,
+                "rsvp_label": null,
+                "external_id": null
+            },
+            "fields": [
+                {
+                    "type": "calculation",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "script": "@[Unique ID](item_app_item_id)",
+                            "color": null,
+                            "expression": null,
+                            "time": null,
+                            "calendar": null,
+                            "decimals": null,
+                            "return_type": "text",
+                            "unit": null
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "GS Invoice ID",
+                        "visible": true,
+                        "delta": 0,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Unique Invoice Number ",
+                        "visible": true,
+                        "delta": 1,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "ACCPAY",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                },
+                                {
+                                    "status": "active",
+                                    "text": "ACCREC",
+                                    "id": 2,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Invoice Type",
+                        "visible": true,
+                        "delta": 2,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Contact Name",
+                        "visible": true,
+                        "delta": 3,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Contact Number",
+                        "visible": true,
+                        "delta": 4,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "date",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "color": "DCEBD8",
+                            "calendar": true,
+                            "end": "disabled",
+                            "time": "disabled"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Issue Date",
+                        "visible": true,
+                        "delta": 5,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "date",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "color": "DCEBD8",
+                            "calendar": true,
+                            "end": "disabled",
+                            "time": "disabled"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Due Date",
+                        "visible": true,
+                        "delta": 6,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "Inclusive",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                },
+                                {
+                                    "status": "active",
+                                    "text": "Exclusive",
+                                    "id": 2,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Line Amount Type",
+                        "visible": true,
+                        "delta": 7,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "html",
+                            "size": "large"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Reference Text",
+                        "visible": true,
+                        "delta": 8,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "html",
+                            "size": "large"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Branding Theme",
+                        "visible": true,
+                        "delta": 9,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "NZD",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                },
+                                {
+                                    "status": "active",
+                                    "text": "AU",
+                                    "id": 2,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Curreny Code",
+                        "visible": true,
+                        "delta": 10,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "SUBMITTED",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                },
+                                {
+                                    "status": "active",
+                                    "text": "APPROVED",
+                                    "id": 2,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Status",
+                        "visible": true,
+                        "delta": 11,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "TRUE",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                },
+                                {
+                                    "status": "active",
+                                    "text": "FALSE",
+                                    "id": 2,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Send to Contact",
+                        "visible": true,
+                        "delta": 12,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Sub Total",
+                        "visible": true,
+                        "delta": 13,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Total Tax",
+                        "visible": true,
+                        "delta": 14,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Total",
+                        "visible": true,
+                        "delta": 15,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "app",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "referenceable_types": []
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "XERO Line Items",
+                        "visible": true,
+                        "delta": 16,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "app",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "referenceable_types": []
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Incoming reference",
+                        "visible": true,
+                        "delta": 17,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "URL for Incoming link",
+                        "visible": true,
+                        "delta": 18,
+                        "hidden": false,
+                        "unique": false
+                    }
+                }
+            ]
+        }
     }
 
 };

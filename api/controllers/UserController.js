@@ -5,62 +5,41 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-var elancAppMainDataObj = elancAppMainDataObj;
-var request = require("request");
 var rp = require('request-promise');
-var podioAuth, elanceAuth, userInfo;
 var OAuth = require('oauth');
-var util     = require('util');
-var js2xmlparser = require("js2xmlparser");
-var oauth_token_old, tokenSecret;
-
-var consumerKey = 'HIW911APZVNIPFQSBJGND0UUINQSUA';
-var consumerSecret = 'AT62QK5EUAHZPGIEQSHUI4WOTMU65Z';
-var requestTokenUrl = 'https://api.xero.com/oauth/RequestToken';
-var accessTokenUrl = 'https://api.xero.com/oauth/AccessToken';
-
-
+var util = require('util');
+var oauth_token_old, oauth_token_secret_old;
 
 module.exports = {
-    signup: function (req, res) {
 
-        res.send('Yup!! Controlller is working :) ')
+    podiologin: function (req, res) {
+        res.redirect('https://podio.com/oauth/authorize?client_id=' + sails.config.globals.xeroAppMainDataObj.client_id_podio + '&redirect_uri=' + sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodio);
     },
 
-    elanceLogin :function(req, res){
-        res.redirect('https://api.elance.com/api2/oauth/authorize?client_id='+sails.config.globals.elancAppMainDataObj.client_id_elance+'&redirect_uri='+sails.config.globals.elancAppMainDataObj.webredirecrUrlElance+'&scope=basicInfo&response_type=code');
-    },
-
-    podiologin :function(req, res){
-        //res.redirect('https://podio.com/oauth/authorize?response_type=token&client_id=elanceapi&redirect_uri='+sails.config.globals.elancAppMainDataObj.localredirecrUrl2);
-        res.redirect('https://podio.com/oauth/authorize?client_id='+sails.config.globals.elancAppMainDataObj.client_id_podio+'&redirect_uri='+sails.config.globals.elancAppMainDataObj.webredirecrUrlPodio);
-    },
-
-    podioauth : function(req, res){
-            console.log(req.param('code'));
-
+    podioauth: function (req, res) {
+        console.log(req.param('code'));
 
         rp({
-            uri: "https://podio.com/oauth/token?grant_type=authorization_code&client_id="+sails.config.globals.elancAppMainDataObj.client_id_podio+"&redirect_uri="+sails.config.globals.elancAppMainDataObj.webredirecrUrlPodio+"&client_secret="+sails.config.globals.elancAppMainDataObj.client_secret_podio+"&code="+req.param('code'),
+            uri: "https://podio.com/oauth/token?grant_type=authorization_code&client_id=" + sails.config.globals.xeroAppMainDataObj.client_id_podio + "&redirect_uri=" + sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlPodio + "&client_secret=" + sails.config.globals.xeroAppMainDataObj.client_secret_podio + "&code=" + req.param('code'),
             method: "POST"
         }).then(function (body) {
 
             var Tokendata = JSON.parse(body);
             Tokendata.tokenName = "podio";
             console.log(Tokendata);
-            sails.config.globals.elancAppMainDataObj.tokenDataPodio = Tokendata;
-            podioAuth = Tokendata;
+            sails.config.globals.xeroAppMainDataObj.tokenDataPodio = Tokendata;
+            var podioAuth = Tokendata;
 
             rp('https://api.podio.com/user/profile?oauth_token=' + Tokendata.access_token)
                 .then(function (body) {
                     var _data = JSON.parse(body);
                     var userInfo = _data;
 
-                    sails.config.globals.elancAppMainDataObj.userInfo = userInfo;
+                    sails.config.globals.xeroAppMainDataObj.userInfo = userInfo;
 
                     var reqUserData = {};
                     reqUserData.userInfo = userInfo;
-                    reqUserData.elanceAuth = elanceAuth;
+                    reqUserData.xeroAuth = sails.config.globals.xeroAppMainDataObj.tokenDataXero;
                     reqUserData.podioAuth = podioAuth;
 
                     return User.saveUser(reqUserData, function (err, users) {
@@ -68,11 +47,8 @@ module.exports = {
                             res.forbidden();
                         } else {
                             res.json(users);
-                            sails.config.globals.elancAppMainDataObj.userData = users;
+                            sails.config.globals.xeroAppMainDataObj.userData = users;
                             res.redirect('/podioWorkSpace');
-                            //sails.controllers.proposals.getElanceProposals(userInfo.user_id);
-                            //sails.controllers.category.getElanceCategory();
-                            //sails.controllers.subcategory.getElanceSubCategory();
                         }
                     });
 
@@ -82,166 +58,64 @@ module.exports = {
                 });
 
 
-
         })
-            .catch(function(error){
+            .catch(function (error) {
                 console.log(error);
             });
 
 
-
-
     },
 
+    podioWorkSpace: function (req, res) {
 
-    podioauthrefresh : function(req, res) {
-        //https://podio.com/oauth/token?grant_type=refresh_token&client_id=YOUR_APP_ID&client_secret=YOUR_APP_SECRET&refresh_token=REFRESH_TOKEN
-
-        request({
-            //uri: "https://api.podio.com/item/"+req.param('item_id')+"?oauth_token=" + sails.config.globals.elancAppMainDataObj.tokenDataPodio.access_token,
-            uri: "https://podio.com/oauth/token?grant_type=refresh_token&client_id=YOUR_APP_ID&client_secret=YOUR_APP_SECRET&refresh_token=REFRESH_TOKEN",
-            method: "GET",
-            timeout: 10000,
-            followRedirect: true,
-            maxRedirects: 10
-        }, function (error, response, body) {
-            var data = JSON.parse(body);
-
-
-
-        });
-
-    },
-
-    getAuthcode : function(req, res){
-        var https = require('https');
-        var querystring = require('querystring');
-
-        var data = querystring.stringify({
-            code: req.param('code'),
-            client_id: sails.config.globals.elancAppMainDataObj.client_id_elance,
-            client_secret: sails.config.globals.elancAppMainDataObj.client_secret_elance,
-            redirect_uri: sails.config.globals.elancAppMainDataObj.webredirecrUrlElance,
-            grant_type: 'authorization_code'
-        });
-
-        var options = {
-            host: 'api.elance.com',
-            path: '/api2/oauth/token',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(data)
-            }
-        };
-
-        var https_req = https.request(options, function(httpsres) {
-            httpsres.setEncoding('utf8');
-            httpsres.on('data', function (chunk) {
-                var chunkData = JSON.parse(chunk);
-                var Tokendata = chunkData.data;
-                Tokendata.tokenName = "elance";
-                console.log(Tokendata);
-                sails.config.globals.elancAppMainDataObj.tokenDataElance = Tokendata;
-                elanceAuth = Tokendata;
-                res.redirect('/podiologin');
-//                return User.saveToken(Tokendata, function (err, token) {
-//                    if (err) {
-//                        res.forbidden();
-//                    } else {
-//                        res.json(token);
-//                        //res.redirect('/project');
-//                        res.redirect('/podiologin');
-//                    }
-//                });
-
-            });
-        });
-
-        https_req.write(data);
-        https_req.end();
-
-    },
-
-    getTokens : function(req, res){
-        return User.getToken(req.body, function (err, token) {
+        PodioAPI.podioOrgSpaces(req.body, function (err, orgs) {
             if (err) {
                 res.forbidden();
             } else {
-                res.json(token);
-                //res.view('layout', {message: 'Login failed!', partial: 'layoutPartial'});
+                res.view('spaces', {orgs: orgs});
             }
         });
     },
 
-    elancePodioConfig : function(req, res){
-        res.view('project', {partialTemp: "configPage"});
-    },
+    xeroLogin: function (req, res) {
+        var oauth = sails.config.globals.xeroAppMainDataObj.xeroOauth;
 
-    xeroLogin : function(req, res){
-        console.log(requestTokenUrl);
-
-        var oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, consumerKey, consumerSecret,'1.0A', null, 'HMAC-SHA1');
-
-        oauth.getOAuthRequestToken({'oauth_callback': 'http://4741ef6c.ngrok.com/backxero'}, function(error, oauth_token, oauth_token_secret, results){
-            if(error) 
+        oauth.getOAuthRequestToken({'oauth_callback': sails.config.globals.xeroAppMainDataObj.baseUrl+sails.config.globals.xeroAppMainDataObj.webredirecrUrlXero}, function (error, oauth_token, oauth_token_secret, results) {
+            if (error)
                 sails.log.error(error);
             else {
                 oauth_token_old = oauth_token;
-                tokenSecret = oauth_token_secret;
-                console.log('oauth_token :' + oauth_token)
-                req.session.oauth_token_secret = oauth_token_secret;
-                console.log('oauth_token_secret :' + oauth_token_secret)
-                console.log('requestoken results :' + util.inspect(results))
-                console.log("Requesting access token")
-                res.redirect('https://api.xero.com/oauth/Authorize?oauth_token='+oauth_token);
+                oauth_token_secret_old = oauth_token_secret;
+                res.redirect('https://api.xero.com/oauth/Authorize?oauth_token=' + oauth_token);
             }
         })
     },
 
-    backxero : function(req,res){
-        console.log(req.params.all());
-        var oauth_token_secret = tokenSecret;
+    backxero: function (req, res) {
+        //console.log(req.params.all());
+
+        var oauth_token_secret = oauth_token_secret_old;
         var oauth_token = req.param('oauth_token');
         var oauth_verifier = req.param('oauth_verifier');
         var org = req.param('org');
-        var oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, consumerKey, consumerSecret,'1.0A', null, 'HMAC-SHA1');
-        oauth.getOAuthAccessToken(oauth_token, oauth_token_secret, oauth_verifier, function(error, oauth_access_token, oauth_access_token_secret, results2) {
-            console.dir(error);
-            console.log(error)
-            console.log('error :'+error)
-            console.log('oauth_access_token :' + oauth_access_token)
-            console.log('oauth_token_secret :' + oauth_access_token_secret)
-            console.log('accesstoken results :' + util.inspect(results2))
-            console.log("Requesting access token");         
-            var data = {
-                'Type':'ACCREC',
-                'Contact':{
-                    'Name':'ABC Limited'
-                },
-                'Date':'2009-08-30',
-                'DueDate':'2009-09-20',
-                'LineAmountTypes':'Exclusive',
-                'LineItems':{
-                    'LineItem':{
-                        'Description':'Consulting services as agreed (20% off standard rate)',
-                        'Quantity':'10',
-                        'UnitAmount':'100.00',
-                        'AccountCode':'200',
-                        'DiscountRate':'20'
-                    }
-                }
-            }
-            var post_body = js2xmlparser("Invoice", data)
-            console.log(post_body);
-            oauth.post("https://api.xero.com/api.xro/2.0/Invoices", oauth_access_token, oauth_access_token_secret, post_body, 'text/xml;charset=UTF-8', function(error, data, response){
-                if(error){
-                    console.log(error)
-                }else{
-                    console.log(data)
-                    // console.log(response)
-                }
-            })
+
+        var oauth = sails.config.globals.xeroAppMainDataObj.xeroOauth;
+
+        console.log("Requesting access token");
+
+        oauth.getOAuthAccessToken(oauth_token, oauth_token_secret, oauth_verifier, function (error, oauth_access_token, oauth_access_token_secret, results2) {
+            console.log(results2);
+            //saving xero auth info. in local DB
+            var xeroAuth = {};
+            xeroAuth.tokenName = "xero";
+            xeroAuth.oauth_access_token = oauth_access_token;
+            xeroAuth.oauth_access_token_secret = oauth_access_token_secret;
+            xeroAuth.oauth_expires_in = results2.oauth_expires_in;
+            xeroAuth.xero_org_muid = results2.xero_org_muid;
+
+            sails.config.globals.xeroAppMainDataObj.tokenDataXero = xeroAuth;
+            res.redirect('/podiologin');
+
         });
     }
 };

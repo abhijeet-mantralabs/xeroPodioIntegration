@@ -70,8 +70,7 @@ module.exports.session = {
   adapter: 'mongo',
   host: 'localhost',
   port: 27017,
-  db: 'elance',
-  collection: 'jobs'
+  db: 'xeroPodio'
 
   /***************************************************************************
   *                                                                          *
