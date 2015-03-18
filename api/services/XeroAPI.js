@@ -8,9 +8,11 @@ module.exports = {
         console.log(post_body);
         oauth.post("https://api.xero.com/api.xro/2.0/Invoices", xeroAccess, xeroAccessSecret, post_body, 'text/xml;charset=UTF-8', function (error, data, response) {
             if (error) {
-                console.log(error)
+                console.log(error);
+                return callback(_error, {"status": "Failed"});
             } else {
-                console.log(data)
+                console.log(data);
+                return callback(null, data);
             }
         });
     }

@@ -65,7 +65,7 @@ module.exports.globals = {
     xeroAppMainDataObj: {},
 
     xeroAppMainDataObjLocal: {
-        baseUrl: 'http://25b56dfd.ngrok.com/',
+        baseUrl: 'http://57609ad3.ngrok.com/',
         userData: {},
         userInfo: {},
         tokenDataXero: {},
@@ -107,8 +107,9 @@ module.exports.globals = {
     },
 
     podioAppPayLoad :{
+        lineItemAppId : "",
         invoiceApp : {
-            "space_id": 3251266,
+            "space_id": "",
             "config": {
                 "allow_edit": true,
                 "tasks": [],
@@ -513,7 +514,7 @@ module.exports.globals = {
                         "default_value": null,
                         "description": null,
                         "settings": {
-                            "referenceable_types": []
+                            "referenceable_types": [this.lineItemAppId]
                         },
                         "required": false,
                         "mapping": null,
@@ -555,6 +556,195 @@ module.exports.globals = {
                         "label": "URL for Incoming link",
                         "visible": true,
                         "delta": 18,
+                        "hidden": false,
+                        "unique": false
+                    }
+                }
+            ]
+        },
+
+        lineItems : {
+            "space_id": "",
+            "config": {
+                "allow_edit": true,
+                "tasks": [],
+                "yesno": false,
+                "silent_creates": false,
+                "yesno_label": null,
+                "thumbs": false,
+                "app_item_id_padding": 1,
+                "show_app_item_id": false,
+                "default_view": "badge",
+                "allow_tags": true,
+                "item_name": "Line Items",
+                "allow_attachments": true,
+                "allow_create": true,
+                "app_item_id_prefix": "",
+                "disable_notifications": false,
+                "fivestar": false,
+                "thumbs_label": null,
+                "type": "standard",
+                "rsvp": false,
+                "description": null,
+                "usage": null,
+                "fivestar_label": null,
+                "approved": false,
+                "icon": "392.png",
+                "allow_comments": true,
+                "name": "Xero Invoice Line Items",
+                "icon_id": 392,
+                "silent_edits": false,
+                "rsvp_label": null,
+                "external_id": null
+            },
+            "fields": [
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Line Item Number",
+                        "visible": true,
+                        "delta": 0,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "text",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "format": "plain",
+                            "size": "small"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Description",
+                        "visible": true,
+                        "delta": 3,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Quanity",
+                        "visible": true,
+                        "delta": 4,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "money",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "allowed_currencies": [
+                                "USD"
+                            ]
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Unit Curreny",
+                        "visible": true,
+                        "delta": 5,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Tax Type",
+                        "visible": true,
+                        "delta": 6,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "number",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "decimals": 0
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Tax Amount",
+                        "visible": true,
+                        "delta": 7,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "money",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "allowed_currencies": [
+                                "USD"
+                            ]
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Line Amount",
+                        "visible": true,
+                        "delta": 8,
+                        "hidden": false,
+                        "unique": false
+                    }
+                },
+                {
+                    "type": "category",
+                    "config": {
+                        "default_value": null,
+                        "description": null,
+                        "settings": {
+                            "multiple": false,
+                            "options": [
+                                {
+                                    "status": "active",
+                                    "text": "200",
+                                    "id": 1,
+                                    "color": "DCEBD8"
+                                }
+                            ],
+                            "display": "inline"
+                        },
+                        "required": false,
+                        "mapping": null,
+                        "label": "Account Code",
+                        "visible": true,
+                        "delta": 9,
                         "hidden": false,
                         "unique": false
                     }

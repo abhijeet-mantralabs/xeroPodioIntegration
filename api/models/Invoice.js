@@ -9,6 +9,17 @@ module.exports = {
 
   attributes: {
 
-  }
+  },
+
+    saveInvoice : function(data, callback){
+        Invoice.create(data).exec(function (err, token) {
+            if (!err) {
+                return callback(null, token);
+
+            } else {
+                return callback(err, {"status": "failed"});
+            }
+        });
+    }
 };
 
